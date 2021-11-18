@@ -1,0 +1,39 @@
+
+const int maxn = 2e5 + 5;
+
+struct node {
+    int l, r, sum;
+} hjt[maxn * 40];
+int cnt, root[maxn];
+
+void update(int l, int r, int pre, int &now, int p) {
+    hjt[++cnt] = hjt[pre];
+    now = cnt;
+    hjt[now].sum++;
+    if (l == r) {
+        return;
+    }
+    int mid = (l + r) >> 1;
+    if (p <= mid) {
+        update(l, mid, hjt[pre].l, hjt[now].l, p);
+    } else {
+        update(mid + 1, r, hjt[pre].r, hjt[now].r, p);
+    }
+}
+
+int query(int l, int r, int L, int R, int k) {
+    if (l == r) {
+        return l;
+    }
+    int mid = (l + r) >> 1;
+    int tem = hjt[hjt[R].l].sum - hjt[hjt[L].l].sum;
+    if (k <= tem) {
+        return query(l, mid, hjt[L].l, hjt[R].l, k);
+    } else {
+        return query(mid + 1, r, hjt[L].r, hjt[R].r, k - tem);
+    }
+}
+
+
+update(1, n, root[i - 1], root[i], a[i])
+query(1, n, root[l-1], root[r], k)

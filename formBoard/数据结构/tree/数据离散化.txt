@@ -1,0 +1,12 @@
+    int n = 6;
+    map<ll,ll> ma;
+    ll arr[7] = {0, 7, 9, 2, 3, 4, 3};
+    ll lsh[7] = {0, 7, 9, 2, 3, 4, 3};
+    sort(lsh + 1, lsh + n + 1);
+    ll cnt = unique(lsh + 1, lsh + n + 1) - lsh - 1;
+    for (int i = 1; i <= cnt; i++) {
+        ma[i] = lsh[i];
+    }
+    for (int i = 1; i <= n; i++) {
+        arr[i] = lower_bound(lsh + 1, lsh + cnt + 1, arr[i])-lsh;
+    }

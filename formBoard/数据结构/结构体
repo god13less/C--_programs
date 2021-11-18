@@ -1,0 +1,11 @@
+struct node{
+    ll len;
+    string s,val;
+    friend bool operator < (const node &a,const node b)
+    {
+        if(a.len==b.len) {
+            return a.s<b.s;
+        }
+        return a.len<b.len;
+    }
+};

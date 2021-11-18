@@ -1,0 +1,43 @@
+普通并查集：
+ll pre[maxn];
+
+void init(){
+    for (int i = 0; i <=maxn; i++) {
+        pre[i]=i;
+    }
+}
+
+ll Find(ll x){
+    if(x!=pre[x]){
+        pre[x] = Find(pre[x]);
+    }
+    return pre[x];
+}
+
+void Union(ll x,ll y){
+    ll fx = Find(x);
+    ll fy = Find(y);
+    if (fx != fy) {
+        pre[fy]=fx;
+    }
+}
+
+带权并查集：
+ll pre[maxn], val[maxn];
+
+void init() {
+    for (int i = 0; i <= maxn; i++) {
+        pre[i] = i;
+        val[i] = 0;
+    }
+}
+
+ll Find(ll x) {
+    if (x == pre[x]) {
+        return x;
+    }
+    ll f = Find(pre[x]);
+    val[x] += val[pre[x]];
+    pre[x]=f;
+    return f;
+}

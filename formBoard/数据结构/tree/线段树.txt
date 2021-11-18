@@ -1,0 +1,151 @@
+const int maxn=100005;
+int t,n,q;
+ll sum[maxn*4],add[maxn*4];
+void pushup(int rt){
+    sum[rt]=sum[rt<<1]+sum[rt<<1|1];
+}
+void pushdown(int rt,int len){
+    if(add[rt]){
+        add[rt<<1]=add[rt];
+        add[rt<<1|1]=add[rt];
+        sum[rt<<1]=add[rt]*(len-(len>>1));
+        sum[rt<<1|1]=add[rt]*(len>>1);
+        add[rt]=0;
+    }
+}
+void build(int l,int r,int rt){
+    add[rt]=0;
+    if(l==r){
+        //scanf("%I64d",&sum[rt]);
+        sum[rt]=1;
+        return;
+    }
+    int m=(l+r)>>1;
+    build(l,m,rt<<1);
+    build(m+1,r,rt<<1|1);
+    pushup(rt);
+}
+void update(int L,int R,int c,int l,int r,int rt){
+    if(L<=l&&R>=r){
+        add[rt]=c;
+        sum[rt]=(ll)c*(r-l+1);
+        return;
+    }
+    pushdown(rt,r-l+1);
+    int m=(l+r)>>1;
+    if(L<=m) update(L,R,c,l,m,rt<<1);
+    if(R>m) update(L,R,c,m+1,r,rt<<1|1);
+    pushup(rt);
+}
+ll querry(int L,int R,int l,int r,int rt){
+    if(L<=l&&R>=r) return sum[rt];
+    pushdown(rt,r-l+1);
+    int m=(l+r)>>1;
+    ll ans=0;
+    if(L<=m) ans+=querry(L,R,l,m,rt<<1);
+    if(R>m) ans+=querry(L,R,m+1,r,rt<<1|1);
+    return ans;
+}
+int main(){
+    int x,y,z;
+    cin>>t;
+    for(int cas=1;cas<=t;cas++){
+        cin>>n>>q;
+        build(1,n,1);
+        while(q--){
+            cin>>x>>y>>z;
+            update(x,y,z,1,n,1);
+        }
+        printf("Case %d: The total value of the hook is %I64d.\n",cas,querry(1,n,1,n,1));
+    }
+}
+
+
+//二维线段树模板题
+struct sub_node {
+    int la, ra, maxL;
+};
+
+struct node {
+    int l, r;
+    sub_node T[maxn];
+} TT[maxn];
+
+void sub_build(int rt, int sub_rt, int la, int ra) {
+    TT[rt].T[sub_rt].la = la;
+    TT[rt].T[sub_rt].ra = ra;
+    TT[rt].T[sub_rt].maxL = -1;
+    if (la == ra) {
+        return;
+    }
+    int mid = (la + ra) >> 1;
+    sub_build(rt, sub_rt << 1, la, mid);
+    sub_build(rt, sub_rt << 1 | 1, mid + 1, ra);
+}
+
+void build(int rt, int l, int r, int la, int ra) {
+    TT[rt].l = l;
+    TT[rt].r = r;
+    sub_build(rt, 1, la, ra);
+    if (l == r) {
+        return;
+    }
+    int mid = (l + r) >> 1;
+    build(rt << 1, l, mid, la, ra);
+    build(rt << 1|1, mid + 1, r, la, ra);
+}
+
+void sub_update(int rt, int sub_rt, int active, int love) {
+    if (TT[rt].T[sub_rt].la == TT[rt].T[sub_rt].ra) {
+        TT[rt].T[sub_rt].maxL = max(TT[rt].T[sub_rt].maxL, love);
+        return;
+    }
+    int mid = (TT[rt].T[sub_rt].la + TT[rt].T[sub_rt].ra) >> 1;
+    if (active <= mid) {
+        sub_update(rt, sub_rt << 1, active, love);
+    } else {
+        sub_update(rt, sub_rt << 1 | 1, active, love);
+    }
+    TT[rt].T[sub_rt].maxL = max(TT[rt].T[sub_rt].maxL, love);
+}
+
+void update(int rt, int height, int active, int love) {
+    sub_update(rt, 1, active, love);
+    if (TT[rt].l == TT[rt].r) {
+        return;
+    }
+    int mid = (TT[rt].l + TT[rt].r) >> 1;
+    if (height <= mid) {
+        update(rt << 1, height, active, love);
+    } else {
+        update(rt << 1 | 1, height, active, love);
+    }
+}
+
+int sub_query(int rt, int sub_rt, int a1, int a2) {
+    if (TT[rt].T[sub_rt].la == a1 && TT[rt].T[sub_rt].ra == a2) {
+        return TT[rt].T[sub_rt].maxL;
+    }
+    int mid = (TT[rt].T[sub_rt].la + TT[rt].T[sub_rt].ra) >> 1;
+    if (a2 <= mid) {
+        return sub_query(rt, sub_rt << 1, a1, a2);
+    } else if (a1 > mid) {
+        return sub_query(rt, sub_rt << 1 | 1, a1, a2);
+    } else {
+        return max(sub_query(rt, sub_rt << 1, a1, mid), sub_query(rt, sub_rt << 1 | 1, mid + 1, a2));
+    }
+}
+
+int query(int rt, int h1, int h2, int a1, int a2) {
+    if (TT[rt].l == h1 && TT[rt].r == h2) {
+        return sub_query(rt, 1, a1, a2);
+    }
+    int mid = (TT[rt].r + TT[rt].l) >> 1;
+    if (h2 <= mid) {
+        return query(rt << 1, h1, h2, a1, a2);
+    } else if (h1 > mid) {
+        return query(rt << 1 | 1, h1, h2, a1, a2);
+    } else {
+        return max(query(rt << 1, h1, mid, a1, a2), query(rt << 1 | 1, mid + 1, h2, a1, a2));
+    }
+}

@@ -1,0 +1,64 @@
+ll quick_pow(ll a,ll b,ll c){
+    ll ans=1,base=a;
+    while(b!=0){
+        if(b&1){
+        	ans=ans*base%c;
+        }
+        base=base*base%c;
+        b>>=1;
+    }
+    return ans;
+}
+
+ll quick_pow(ll a,ll b){
+    ll ans=1,base=a;
+    while(b!=0){
+        if(b&1){
+        	ans=ans*base;
+        }
+        base=base*base;
+        b>>=1;
+    }
+    return ans;
+}
+
+______________________________________________________________________________________
+矩阵快速幂
+
+struct node {
+    ll x[15][15];
+
+    node() {
+        memset(x, 0, sizeof x);
+    }
+} ;
+
+node mul(node a, node b) {
+    node s;
+    memset(s.x, 0, sizeof s.x);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            for (int l = 0; l < n; l++) {
+                s.x[i][j] = (s.x[i][j] + a.x[i][l] * b.x[l][j]) % mod;
+            }
+        }
+    }
+    return s;
+}
+
+node quickly_pow(node a, ll times, ll mod) {
+    node ans;
+    memset(ans.x, 0, sizeof ans.x);
+    for (int i = 0; i < n; i++) {
+        ans.x[i][i] = 1;
+    }
+    while (times) {
+        if (times & 1) {
+            ans = mul(a, ans);
+        }
+        a = mul(a, a);
+        times >>= 1;
+    }
+    return ans;
+}
+
