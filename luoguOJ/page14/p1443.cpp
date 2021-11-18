@@ -24,9 +24,23 @@ inline ll rd()
     }
     return f ? -x : x;
 }
+int n, m, x, y;
+int visit[N][N], ans[N][N];
+int w[8][2] = {{}};
+
+void dfs(int x, int y)
+{
+}
+
+void save()
+{
+    memset(visit, 0, sizeof(visit));
+    memset(ans, 0, sizeof(ans));
+}
 
 int main()
 {
-
+    cin >> n >> m >> x >> y;
+    save();
     return 0;
 }
