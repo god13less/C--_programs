@@ -79,7 +79,7 @@ void save()
     {
         for (int j = 1; j <= m; j++)
         {
-            cout <<setiosflags(ios::left) <<setw(5) << setfill(' ') << ans[i][j];
+            cout << setiosflags(ios::left) << setw(5) << setfill(' ') << ans[i][j];
         }
         cout << endl;
     }
