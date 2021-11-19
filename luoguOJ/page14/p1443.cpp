@@ -28,6 +28,7 @@ inline ll rd()
     }
     return f ? -x : x;
 }
+
 int n, m, x, y;
 int visit[N][N], ans[N][N];
 int w[8][2] = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
