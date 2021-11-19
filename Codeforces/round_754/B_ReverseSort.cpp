@@ -28,17 +28,40 @@ inline ll rd()
 int t, m;
 string str;
 
-void save()
+void solve()
 {
-    cin >> t;
-    while (t--)
+    int n;
+    cin >> n;
+    char c[n + 1];
+    cin >> c;
+    vector<int> v;
+    for (int i = 0; i < n; i++)
     {
-        cin >> m >> str;
+        if (count(c, c + i, '1') == 0)
+            continue;
+        if (count(c, c + i, '1') == count(c + i, c + n, '0'))
+        {
+            cout << 1 << '\n'
+                 << 2 * count(c, c + i, '1') << " ";
+            for (int j = 0; j < i; j++)
+                if (c[j] == '1')
+                    cout << j + 1 << " ";
+            for (int j = i; j < n; j++)
+                if (c[j] == '0')
+                    cout << j + 1 << " ";
+            cout << '\n';
+            return;
+        }
     }
+    cout << 0 << '\n';
 }
 
 int main()
 {
-    save();
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
     return 0;
 }
